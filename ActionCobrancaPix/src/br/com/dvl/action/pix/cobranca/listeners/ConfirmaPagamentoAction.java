@@ -1,31 +1,23 @@
 package br.com.dvl.action.pix.cobranca.listeners;
 
-import br.com.action.pix.service.BuscaDadosPIX;
-import br.com.action.pix.service.PIXDAO;
-import br.com.sankhya.jape.EntityFacade;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.cuckoo.core.ScheduledAction;
-import org.cuckoo.core.ScheduledActionContext;
-
+import br.com.action.pix.service.BuscaDadosPIX;
+import br.com.action.pix.service.PIXDAO;
+import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
+import br.com.sankhya.extensions.actionbutton.ContextoAcao;
+import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 
-public class ConfirmaPagamentoPIX implements ScheduledAction{
+public class ConfirmaPagamentoAction implements AcaoRotinaJava {
 
 	@Override
-	public void onTime(ScheduledActionContext arg0) {
-        try {
-			buscaDadosPIX();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-	}
-	
+	public void doAction(ContextoAcao arg0) throws Exception {
+		buscaDadosPIX();		
+	} 
 	
 	public void buscaDadosPIX() throws Exception {
 		JdbcWrapper jdbc = null;
@@ -50,5 +42,9 @@ public class ConfirmaPagamentoPIX implements ScheduledAction{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
+
+	
+
 }

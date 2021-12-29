@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+
 import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.core.JapeSession.SessionHandle;
@@ -24,6 +26,10 @@ public class PIXDAO {
     
 	public void criaCobrancaDAO(String pixResponse, Number nuNota ) throws Exception {
          setCobrancaDAO(pixResponse, nuNota); 		
+	}
+	
+	public void atualizaCobrancaDAO(String pixResponse, String txid ) throws Exception {
+		updateCobrancaDAO(pixResponse,txid);
 	}
 	
 	
@@ -82,5 +88,30 @@ public class PIXDAO {
 		}
 
 			
+	}
+	
+@SuppressWarnings("unchecked")
+private void updateCobrancaDAO( String pixResponse,String txid ) throws Exception {
+	   JdbcWrapper jdbc = null;
+	   NativeSql sql = null;
+	   SessionHandle hnd = null;
+	
+        Gson gsonToken = new Gson(); 
+        Map<String,Object> map = new HashMap<String,Object>();
+                  
+        map  = (Map<String,Object>) gsonToken.fromJson(pixResponse, map.getClass());
+        
+        if ( map.get("pix").toString() != "[]" ) {     
+        	
+        	  EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+			  jdbc = entity.getJdbcWrapper();
+			  jdbc.openSession();
+			  sql = new NativeSql(jdbc);
+			  sql.appendSql("UPDATE AD_PXPG SET STATUS = :STATUS WHERE TXID = :TXID");
+			  sql.setNamedParameter("STATUS", "PAGO");
+			  sql.setNamedParameter("TXID", txid);
+			  sql.executeUpdate();
+
+        }
 	}
 }
