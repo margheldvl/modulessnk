@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
@@ -65,10 +64,10 @@ public class PIXDAO {
 			  jdbc = entity.getJdbcWrapper();
 			  jdbc.openSession();
 			  sql = new NativeSql(jdbc);
-			  sql.appendSql("INSERT INTO AD_PXPG ( NUMOTA, VRTOT, STATUS, TXID, PIXCC, QRC64 ) VALUES "
+			  sql.appendSql("INSERT INTO AD_PXPG ( NUNOTA, VRTOT, STATUS, TXID, PIXCC, QRC64 ) VALUES "
 			  		      + "(:NUMOTA, :VRTOT, :STATUS, :TXID, :PIXCC, :QRC64 )");
 
-			  sql.setNamedParameter("NUMOTA", notaVO.asBigDecimal("NUNOTA"));
+			  sql.setNamedParameter("NUNOTA", notaVO.asBigDecimal("NUNOTA"));
 			  sql.setNamedParameter("VRTOT", mapV.get("original"));
 			  sql.setNamedParameter("STATUS", map.get("status").toString());
 			  sql.setNamedParameter("TXID", map.get("txid").toString());
@@ -94,7 +93,7 @@ public class PIXDAO {
 private void updateCobrancaDAO( String pixResponse,String txid ) throws Exception {
 	   JdbcWrapper jdbc = null;
 	   NativeSql sql = null;
-	   SessionHandle hnd = null;
+
 	
         Gson gsonToken = new Gson(); 
         Map<String,Object> map = new HashMap<String,Object>();
