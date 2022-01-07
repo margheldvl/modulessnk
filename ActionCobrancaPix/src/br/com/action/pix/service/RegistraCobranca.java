@@ -136,7 +136,7 @@ public class RegistraCobranca {
             JsonObject rootObject = new JsonObject();
 
 	    	JsonObject calendarioObject = new JsonObject();
-	    	calendarioObject.addProperty("expiracao", 3600);
+	    	calendarioObject.addProperty("expiracao", 864000);
 	    	rootObject.add("calendario",calendarioObject);
 		
 		    JsonObject devedorObject = new JsonObject();

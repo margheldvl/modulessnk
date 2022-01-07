@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+
 import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.core.JapeSession.SessionHandle;
@@ -24,6 +25,10 @@ public class PIXDAO {
     
 	public void criaCobrancaDAO(String pixResponse, Number nuNota ) throws Exception {
          setCobrancaDAO(pixResponse, nuNota); 		
+	}
+	
+	public void atualizaCobrancaDAO(String pixResponse, String txid ) throws Exception {
+		updateCobrancaDAO(pixResponse,txid);
 	}
 	
 	
@@ -59,10 +64,10 @@ public class PIXDAO {
 			  jdbc = entity.getJdbcWrapper();
 			  jdbc.openSession();
 			  sql = new NativeSql(jdbc);
-			  sql.appendSql("INSERT INTO AD_PXPG ( NUMOTA, VRTOT, STATUS, TXID, PIXCC, QRC64 ) VALUES "
+			  sql.appendSql("INSERT INTO AD_PXPG ( NUNOTA, VRTOT, STATUS, TXID, PIXCC, QRC64 ) VALUES "
 			  		      + "(:NUMOTA, :VRTOT, :STATUS, :TXID, :PIXCC, :QRC64 )");
 
-			  sql.setNamedParameter("NUMOTA", notaVO.asBigDecimal("NUNOTA"));
+			  sql.setNamedParameter("NUNOTA", notaVO.asBigDecimal("NUNOTA"));
 			  sql.setNamedParameter("VRTOT", mapV.get("original"));
 			  sql.setNamedParameter("STATUS", map.get("status").toString());
 			  sql.setNamedParameter("TXID", map.get("txid").toString());
@@ -82,5 +87,30 @@ public class PIXDAO {
 		}
 
 			
+	}
+	
+@SuppressWarnings("unchecked")
+private void updateCobrancaDAO( String pixResponse,String txid ) throws Exception {
+	   JdbcWrapper jdbc = null;
+	   NativeSql sql = null;
+
+	
+        Gson gsonToken = new Gson(); 
+        Map<String,Object> map = new HashMap<String,Object>();
+                  
+        map  = (Map<String,Object>) gsonToken.fromJson(pixResponse, map.getClass());
+        
+        if ( map.get("pix").toString() != "[]" ) {     
+        	
+        	  EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+			  jdbc = entity.getJdbcWrapper();
+			  jdbc.openSession();
+			  sql = new NativeSql(jdbc);
+			  sql.appendSql("UPDATE AD_PXPG SET STATUS = :STATUS WHERE TXID = :TXID");
+			  sql.setNamedParameter("STATUS", "PAGO");
+			  sql.setNamedParameter("TXID", txid);
+			  sql.executeUpdate();
+
+        }
 	}
 }
