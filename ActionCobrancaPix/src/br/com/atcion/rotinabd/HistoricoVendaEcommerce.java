@@ -15,39 +15,39 @@ public class HistoricoVendaEcommerce implements AcaoRotinaJava {
 	@Override
 	public void doAction(ContextoAcao arg0) throws Exception {
 		insereHistoricoVendaAFV();
-	} 
-	
-	private String insereHistoricoVendaAFV() throws Exception {
-		String res =  insereHistoricoCabecPedidosAFV();
-		res = res + " - " + insereHistoricoItemPedidosAFV();
-		return res;
 	}
-	
-	private String insereHistoricoCabecPedidosAFV() throws Exception {
-		
+
+	private void insereHistoricoVendaAFV() throws Exception {
+		insereHistoricoCabecPedidosAFV();
+		insereHistoricoItemPedidosAFV();
+	}
+
+	private void insereHistoricoCabecPedidosAFV() throws Exception {
+
 		JdbcWrapper jdbc = null;
 		EntityFacade entity = EntityFacadeFactory.getDWFFacade();
-		
-		String resul = "";
-		
+
 		jdbc = entity.getJdbcWrapper();
 		try {
 			jdbc.openSession();
 			NativeSql sqlGeraScript = new NativeSql(jdbc);
-			
+
 			sqlGeraScript.appendSql("SELECT VEN.CODVEND,");
 			sqlGeraScript.appendSql("       CODPARCAFV,");
 			sqlGeraScript.appendSql("       CAB.CODPARC,");
 			sqlGeraScript.appendSql("       CAB.CODEMPNEGOC,");
 			sqlGeraScript.appendSql("       CAB.NUNOTA,");
 			sqlGeraScript.appendSql("       CAB.DTNEG,");
-			sqlGeraScript.appendSql("       'Insert into AFV_ANDROID.te_histpedido@PROVIDER (NUMPEDIDOEMP,NUMPEDIDOAFV,CODIGOCLIENTE,STATUSPEDIDO,VALORPEDIDO,VALORFATURADO,DATAPEDIDO,DATAPREVISTAENTREGA,ORIGEMPEDIDO,CODIGOTIPOPEDIDO,CODIGOCONDPAGTO,DESCRICAOFRETE,DESCONTOCONDPAGTO,CODIGOVENDEDORESP,CODIGOVENDEDOR,CODIGOEMPRESAESP,CODIGOEMPRESA,DATAATUALIZACAO,FLAGSTATUS,NUMPEDIDOAFVSERVER,CESP_CODIGOFORMAPAGTO,CESP_CODIGOUNIDFAT,CESP_MODALIDADE,CESP_PEDDISP) values ('");
+			sqlGeraScript.appendSql(
+					"       'Insert into AFV_ANDROID.te_histpedido@PROVIDER (NUMPEDIDOEMP,NUMPEDIDOAFV,CODIGOCLIENTE,STATUSPEDIDO,VALORPEDIDO,VALORFATURADO,DATAPEDIDO,DATAPREVISTAENTREGA,ORIGEMPEDIDO,CODIGOTIPOPEDIDO,CODIGOCONDPAGTO,DESCRICAOFRETE,DESCONTOCONDPAGTO,CODIGOVENDEDORESP,CODIGOVENDEDOR,CODIGOEMPRESAESP,CODIGOEMPRESA,DATAATUALIZACAO,FLAGSTATUS,NUMPEDIDOAFVSERVER,CESP_CODIGOFORMAPAGTO,CESP_CODIGOUNIDFAT,CESP_MODALIDADE,CESP_PEDDISP) values ('");
 			sqlGeraScript.appendSql("       || '''E'");
-			sqlGeraScript.appendSql("       || Cast(( SYSDATE - TO_DATE('01-JAN-1970', 'DD-MON-YYYY') ) * ( 24 * 60 * 60 * 1000 ) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP, 'FF3')) AS VARCHAR(20))");
+			sqlGeraScript.appendSql(
+					"       || Cast(( SYSDATE - TO_DATE('01-JAN-1970', 'DD-MON-YYYY') ) * ( 24 * 60 * 60 * 1000 ) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP, 'FF3')) AS VARCHAR(20))");
 			sqlGeraScript.appendSql("       || ROWNUM");
 			sqlGeraScript.appendSql("       || ''', '");
 			sqlGeraScript.appendSql("       || '''E'");
-			sqlGeraScript.appendSql("       || Cast(( SYSDATE - TO_DATE('01-JAN-1970', 'DD-MON-YYYY') ) * ( 24 * 60 * 60 * 1000 ) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP, 'FF3')) AS VARCHAR(20))");
+			sqlGeraScript.appendSql(
+					"       || Cast(( SYSDATE - TO_DATE('01-JAN-1970', 'DD-MON-YYYY') ) * ( 24 * 60 * 60 * 1000 ) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP, 'FF3')) AS VARCHAR(20))");
 			sqlGeraScript.appendSql("       || ROWNUM");
 			sqlGeraScript.appendSql("       || ''', '''");
 			sqlGeraScript.appendSql("       || CAB.CODPARC");
@@ -123,7 +123,8 @@ public class HistoricoVendaEcommerce implements AcaoRotinaJava {
 			sqlGeraScript.appendSql("       LEFT JOIN AD_TGFEPF EPF ");
 			sqlGeraScript.appendSql("              ON( EPF.ANALITICO = 'S' ");
 			sqlGeraScript.appendSql("                  AND EPF.ATIVO = 'S' ");
-			sqlGeraScript.appendSql("                  AND SUBSTR(EPF.CODREG, 2, LENGTH(EPF.CODREG) - 1) = CAB.CODEMPNEGOC ) ");
+			sqlGeraScript.appendSql(
+					"                  AND SUBSTR(EPF.CODREG, 2, LENGTH(EPF.CODREG) - 1) = CAB.CODEMPNEGOC ) ");
 			sqlGeraScript.appendSql("       LEFT JOIN TGFVEN VEN ");
 			sqlGeraScript.appendSql("              ON ( EPF.CODVEND = VEN.CODVEND ");
 			sqlGeraScript.appendSql("                   AND ( VEN.TIPVEND = 'V' ");
@@ -134,49 +135,44 @@ public class HistoricoVendaEcommerce implements AcaoRotinaJava {
 			sqlGeraScript.appendSql("WHERE  CAB.TIPMOV IN( 'V', 'D' ) ");
 			sqlGeraScript.appendSql("       AND EMPAFV.CODIGOEMPRESAESP IS NOT NULL ");
 			sqlGeraScript.appendSql("ORDER BY CAB.NUNOTA ");
-            
-			
-            
-			try {
-				
-            	ResultSet rs = sqlGeraScript.executeQuery();
 
-            	NativeSql execScript = new NativeSql(jdbc);                	            	
-            	while(rs.next()) {
-                	execScript = new NativeSql(jdbc);                	
-                	execScript.appendSql(rs.getString("SQL"));
-                	execScript.executeUpdate();                	              	 
-                }   
-                
+			try {
+
+				ResultSet rs = sqlGeraScript.executeQuery();
+
+				NativeSql execScript = new NativeSql(jdbc);
+				while (rs.next()) {
+					execScript = new NativeSql(jdbc);
+					execScript.appendSql(rs.getString("SQL"));
+					execScript.executeUpdate();
+				}
+
 			} catch (Exception e) {
-				resul = resul +  e.getMessage();
+				e.printStackTrace();
 			}
-            
-            
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return resul;
 
 	}
-	
 
-	private String insereHistoricoItemPedidosAFV() throws Exception {
-		
+	private void insereHistoricoItemPedidosAFV() throws Exception {
+
 		JdbcWrapper jdbc = null;
 		EntityFacade entity = EntityFacadeFactory.getDWFFacade();
-		
-		String resul = "";
-		
+
 		jdbc = entity.getJdbcWrapper();
+
 		try {
 			jdbc.openSession();
 			NativeSql sqlGeraScript = new NativeSql(jdbc);
-			
+
 			sqlGeraScript.appendSql("SELECT CAB.NUNOTA, ");
 			sqlGeraScript.appendSql("       PED.NUMPEDIDOEMP, ");
 			sqlGeraScript.appendSql("       CAB.AD_PEDPALM, ");
-			sqlGeraScript.appendSql("'Insert into AFV_ANDROID.te_histpedidoitem@PROVIDER (NUMPEDIDOEMP,CODIGOPRODUTO,DESCRICAOPRODUTO,QTDEVENDA,QTDEBONIFICADA,QTDECORTADA,DESCONTO,VALORVENDA,CODIGOCONDPAGTO,CODIGOEMPRESAESP,CODIGOEMPRESA,DATAATUALIZACAO,MOTIVOCORTE,VALORDESCONTO,TOTALPESO,VRTOTALCOMISSAO,SALDOQTDEVENDA,FLAG_GERARVERBA)  values ( ' ");
+			sqlGeraScript.appendSql(
+					"'Insert into AFV_ANDROID.te_histpedidoitem@PROVIDER (NUMPEDIDOEMP,CODIGOPRODUTO,DESCRICAOPRODUTO,QTDEVENDA,QTDEBONIFICADA,QTDECORTADA,DESCONTO,VALORVENDA,CODIGOCONDPAGTO,CODIGOEMPRESAESP,CODIGOEMPRESA,DATAATUALIZACAO,MOTIVOCORTE,VALORDESCONTO,TOTALPESO,VRTOTALCOMISSAO,SALDOQTDEVENDA,FLAG_GERARVERBA)  values ( ' ");
 			sqlGeraScript.appendSql("|| '''' ");
 			sqlGeraScript.appendSql("|| PED.NUMPEDIDOEMP ");
 			sqlGeraScript.appendSql("|| '''' ");
@@ -242,8 +238,10 @@ public class HistoricoVendaEcommerce implements AcaoRotinaJava {
 			sqlGeraScript.appendSql("                                     GROUP  BY AD_PEDPALM, ");
 			sqlGeraScript.appendSql("                                               AD_NUNOTADUP)CAB2 ");
 			sqlGeraScript.appendSql("                         OUTER APPLY(SELECT Count(1) QDEITENSENC ");
-			sqlGeraScript.appendSql("                                     FROM   AFV_ANDROID.TE_HISTPEDIDOITEM@PROVIDER HISTPEDITEM ");
-			sqlGeraScript.appendSql("                                     WHERE  HISTPEDITEM.NUMPEDIDOEMP = HISTPED.NUMPEDIDOEMP)ITEPEDAFV ");
+			sqlGeraScript.appendSql(
+					"                                     FROM   AFV_ANDROID.TE_HISTPEDIDOITEM@PROVIDER HISTPEDITEM ");
+			sqlGeraScript.appendSql(
+					"                                     WHERE  HISTPEDITEM.NUMPEDIDOEMP = HISTPED.NUMPEDIDOEMP)ITEPEDAFV ");
 			sqlGeraScript.appendSql("                  WHERE  ORIGEMPEDIDO IS NOT NULL ");
 			sqlGeraScript.appendSql("                         AND HISTPED.NUMPEDIDOAFV LIKE 'E%') PED ");
 			sqlGeraScript.appendSql("               ON( PED.AD_NUNOTADUP = CAB.NUNOTA ) ");
@@ -261,34 +259,27 @@ public class HistoricoVendaEcommerce implements AcaoRotinaJava {
 			sqlGeraScript.appendSql("          CAB.NUNOTA, ");
 			sqlGeraScript.appendSql("          CAB.AD_PEDPALM, ");
 			sqlGeraScript.appendSql("          ITE.CODPROD, ");
-			sqlGeraScript.appendSql("          ITE.CODVOL  ");            
-			
-            
-			try {
-				
-            	ResultSet rs = sqlGeraScript.executeQuery();
+			sqlGeraScript.appendSql("          ITE.CODVOL  ");
 
-            	NativeSql execScript = new NativeSql(jdbc);                	            	
-            	while(rs.next()) {
-                	execScript = new NativeSql(jdbc);                	
-                	execScript.appendSql(rs.getString("SQL"));
-                	execScript.executeUpdate();                	              	 
-                }   
-                
+			try {
+
+				ResultSet rs = sqlGeraScript.executeQuery();
+
+				NativeSql execScript = new NativeSql(jdbc);
+				while (rs.next()) {
+					execScript = new NativeSql(jdbc);
+					execScript.appendSql(rs.getString("SQL"));
+					execScript.executeUpdate();
+				}
+
 			} catch (Exception e) {
-				resul = resul +  e.getMessage();
+				e.printStackTrace();
 			}
-            
-            
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return resul;
 
-	}	
-
-
-	
+	}
 
 }
