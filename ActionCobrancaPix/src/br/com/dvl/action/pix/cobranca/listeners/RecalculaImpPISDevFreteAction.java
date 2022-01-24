@@ -12,7 +12,7 @@ public class RecalculaImpPISDevFreteAction  implements AcaoRotinaJava {
 		String dataFim = ctx.getParam("DATAFIM").toString();
 		RecalculaImpostosDevolucao recDev = new RecalculaImpostosDevolucao();
 		
-        recDev.recalculaImpostosPISFretePeriodo(dataIni, dataFim);
+     //   recDev.recalculaImpostosPISPeriodo(dataIni, dataFim);
         ctx.setMensagemRetorno("Impostos atualizados com sucesso!");
 	}
 

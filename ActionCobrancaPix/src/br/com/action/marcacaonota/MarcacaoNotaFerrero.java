@@ -25,7 +25,7 @@ public class MarcacaoNotaFerrero {
 		sqlUpdate.appendSql("				select  TGFCAB.nunota ");
 		sqlUpdate.appendSql("				  from AD_TGFSIDN  ");
 		sqlUpdate.appendSql("				  JOIN TGFCAB on TGFCAB.NUNOTA = AD_TGFSIDN.NUNOTA ");
-	    sqlUpdate.appendSql("				  where CAST(AD_TGFSIDN.dtref AS DATE ) = CAST(:DTREF AS DATE) and AD_NUEISID is null ) ");
+	    sqlUpdate.appendSql("				  where CAST(AD_TGFSIDN.dtref AS DATE ) = CAST(' :DTREF ' AS DATE) and AD_NUEISID is null ) ");
 		sqlUpdate.setNamedParameter("NUMARC", NuMarcacao);
 		sqlUpdate.setNamedParameter("DTREF", dataref);
 		try {

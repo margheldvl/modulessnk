@@ -65,7 +65,7 @@ public class PIXDAO {
 			  jdbc.openSession();
 			  sql = new NativeSql(jdbc);
 			  sql.appendSql("INSERT INTO AD_PXPG ( NUNOTA, VRTOT, STATUS, TXID, PIXCC, QRC64 ) VALUES "
-			  		      + "(:NUMOTA, :VRTOT, :STATUS, :TXID, :PIXCC, :QRC64 )");
+			  		      + "(:NUNOTA, :VRTOT, :STATUS, :TXID, :PIXCC, :QRC64 )");
 
 			  sql.setNamedParameter("NUNOTA", notaVO.asBigDecimal("NUNOTA"));
 			  sql.setNamedParameter("VRTOT", mapV.get("original"));

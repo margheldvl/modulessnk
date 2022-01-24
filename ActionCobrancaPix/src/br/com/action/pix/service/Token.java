@@ -22,8 +22,8 @@ import br.com.sankhya.modelcore.assinaturadigital.DigitalSignatureManager;
 import com.google.gson.Gson;
 
 public class Token {
-    private final String clientId = "5c80b719-4cb0-4ce8-baf1-e015fda8062a" ;
-    private final String clientSecret = "05dae797-8026-489d-a8ef-4f64d87ead9f";
+    private final String clientId = "" ;
+    private final String clientSecret = "";
     public Token() {
 	}
 	
@@ -45,7 +45,7 @@ public class Token {
 
     		// Add certificate
     		File p12 = new File(DigitalSignatureManager.getBaseFolder() + "dvlpix.p12");
-    		String p12password = "dvlpix";
+    		String p12password = "";
 
     		InputStream keyInput = new FileInputStream(p12);
 
