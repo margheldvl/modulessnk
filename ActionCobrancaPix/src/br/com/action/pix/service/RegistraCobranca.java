@@ -58,7 +58,7 @@ public class RegistraCobranca {
 
     		// Add certificate
     		File p12 = new File(DigitalSignatureManager.getBaseFolder() + "dvlpix.p12");
-    		String p12password = "dvlpix";
+    		String p12password = "xxxxxxxx";
 
     		InputStream keyInput = new FileInputStream(p12);
 
@@ -156,7 +156,7 @@ public class RegistraCobranca {
 		    rootObject.add("devedor", devedorObject);
          		    		    
 		    JsonObject valorObject = new JsonObject();
-		    valorObject.addProperty("original", "1.0");
+		    valorObject.addProperty("original", notaVO.asBigDecimal("VLRNOTA"));
 		    rootObject.add("valor", valorObject);
 		    //CNPJ ou chave PIX
 		    rootObject.addProperty("chave", "25681529000149");

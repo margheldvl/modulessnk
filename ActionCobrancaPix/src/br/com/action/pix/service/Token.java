@@ -22,8 +22,8 @@ import br.com.sankhya.modelcore.assinaturadigital.DigitalSignatureManager;
 import com.google.gson.Gson;
 
 public class Token {
-    private final String clientId = "" ;
-    private final String clientSecret = "";
+    private final String clientId = "xxxxxx" ;
+    private final String clientSecret = "xxxxxxx";
     public Token() {
 	}
 	
@@ -34,7 +34,7 @@ public class Token {
     @SuppressWarnings("unchecked")
 	public String buscaTokenTLS() {
     	HttpURLConnection connection = null;
-    	String tokenStr = "";
+    	String tokenStr = "xxxxx";
     	try {
     		URL url = new URL("https://sts.itau.com.br/api/oauth/token");
 
@@ -45,7 +45,7 @@ public class Token {
 
     		// Add certificate
     		File p12 = new File(DigitalSignatureManager.getBaseFolder() + "dvlpix.p12");
-    		String p12password = "";
+    		String p12password = "dvlpix@123";
 
     		InputStream keyInput = new FileInputStream(p12);
 
@@ -89,7 +89,8 @@ public class Token {
     	        tokenStr = map.get("access_token").toString();
   
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		tokenStr = e.toString();
+    		 
     	} finally {
     		if (connection != null)
     			connection.disconnect();

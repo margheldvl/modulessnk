@@ -34,7 +34,7 @@ public class CobrancaImediataPixEvent implements EventoProgramavelJava {
 			DynamicVO tipVendaVO = (DynamicVO) dwfEntityFacade.findEntityByPrimaryKeyAsVO("TipoNegociacao", new Object[]{newVO.asBigDecimal("CODTIPVENDA"), newVO.asTimestamp("DHTIPVENDA")});
 
 			if (  ( tipVendaVO.asString("AD_PIX") != null &&  tipVendaVO.asString("AD_PIX").equals("S") )  &&  
-				  ( newVO.asString("STATUSNFE")   != null &&  newVO.asString("STATUSNFE").equals("A") ) && 
+				  //( newVO.asString("STATUSNFE")   != null &&  newVO.asString("STATUSNFE").equals("A") ) && 
 		          ( newVO.asString("STATUSNOTA")  != null &&  newVO.asString("STATUSNOTA").equals("L") )
 		       ) {
 					RegistraCobranca cob = new RegistraCobranca(); 
