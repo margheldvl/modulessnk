@@ -61,7 +61,7 @@ public class BuscaDadosPIX {
 
     		// Add certificate
     		File p12 = new File(DigitalSignatureManager.getBaseFolder() + "dvlpix.p12");
-    		String p12password = "dvlpix";
+    		String p12password = "xxxxxxxx";
 
     		InputStream keyInput = new FileInputStream(p12);
 
@@ -121,7 +121,7 @@ public class BuscaDadosPIX {
 
     		// Add certificate
     		File p12 = new File(DigitalSignatureManager.getBaseFolder() + "dvlpix.p12");
-    		String p12password = "dvlpix";
+    		String p12password = "xxxxxxxxxxx";
 
     		InputStream keyInput = new FileInputStream(p12);
 
