@@ -10,9 +10,9 @@ import br.com.sankhya.extensions.actionbutton.Registro;
 import br.com.sankhya.inventario.service.InventarioService;
 
 public class AcaoInsereRetornoMercadoria implements AcaoRotinaJava {
-	
+
 	private InventarioService inventarioService;
-	
+
 	public AcaoInsereRetornoMercadoria() {
 		inventarioService = new InventarioService();
 	}
@@ -48,23 +48,33 @@ public class AcaoInsereRetornoMercadoria implements AcaoRotinaJava {
 			listaNotas.add(s);
 		}
 
+		Integer qdeNotasOrdensCargaEnc = 0;
 		List<String> listOrdemCargaEncont = null;
-		listOrdemCargaEncont = inventarioService.achouApenasUmaOrdemCarga(listaNotas, ordemCarga);
-		Integer qdeOrdensCargaEnc = listOrdemCargaEncont.size();
+		qdeNotasOrdensCargaEnc = 0;
 
-		{
-			boolean achouApenasUmaOrdemCarga = qdeOrdensCargaEnc == 1 ? true : false;
+		listOrdemCargaEncont = inventarioService.achouApenasUmaOrdemCarga(listaNotas, ordemCarga);
+
+		qdeNotasOrdensCargaEnc = listOrdemCargaEncont != null ? listOrdemCargaEncont.size() : 0;
+
+		if (qdeNotasOrdensCargaEnc > 0) {
+
+			boolean achouApenasUmaOrdemCarga = qdeNotasOrdensCargaEnc <= 1 ? true : false;
 
 			if (achouApenasUmaOrdemCarga) {
-
 				List<String> listNotasNaoEnc = null;
 				listNotasNaoEnc = inventarioService.notasNaoEncontradas(listaNotas, ordemCarga);
-
 				if (listNotasNaoEnc.size() == 0) {
-					inventarioService.insereRetornoMercadorias(listaNotas, ordemCarga, codUser);
-					mensagem.append("Procedimento concluído!").append("\n");
+
+					String retorno = inventarioService.insereRetornoMercadorias(listaNotas, ordemCarga, codUser);
+
+					if (retorno != null) {
+						mensagem.append("Mensagem: " + retorno).append("\n");
+						mensagem.append("O Procedimento será cancelado!").append("\n");
+					} else {
+						mensagem.append("Procedimento concluído!").append("\n");
+					}
 				} else {
-					mensagem.append("Notas não localizadas, favor condferir.").append("\n");
+					mensagem.append("Notas não localizadas, favor conferir.").append("\n");
 					for (int j = 0; j < listNotasNaoEnc.size(); j++) {
 						mensagem.append("Nota Número: " + listNotasNaoEnc.get(j)).append("\n");
 					}
@@ -73,13 +83,16 @@ public class AcaoInsereRetornoMercadoria implements AcaoRotinaJava {
 
 			} else {
 
-				mensagem.append("Foram encontradas mais de uma ordem de carga para notas informadas:").append("\n");
+				mensagem.append("Foram encontradas mais de uma ordem de carga para as notas informadas:").append("\n");
 
 				for (int j = 0; j < listOrdemCargaEncont.size(); j++) {
 					mensagem.append(listOrdemCargaEncont.get(j)).append("\n");
 				}
 
 			}
+
+		} else {
+			mensagem.append("Nenhuma nota informada está vinculada na ordem de carga " + ordemCarga + ".");
 		}
 
 		ctx.setMensagemRetorno(mensagem.toString());

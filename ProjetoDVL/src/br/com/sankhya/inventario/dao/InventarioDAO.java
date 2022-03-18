@@ -1,5 +1,6 @@
 package br.com.sankhya.inventario.dao;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,18 +14,23 @@ import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 public class InventarioDAO {
 
 	public List<String> achouApenasUmaOrdemCarga(List<String> listNota, String ordemCarga) throws Exception {
+	//	public String achouApenasUmaOrdemCarga(List<String> listNota, String ordemCarga) throws Exception {
 
 		JdbcWrapper jdbc = null;
 		EntityFacade entity = EntityFacadeFactory.getDWFFacade();
 
 		jdbc = entity.getJdbcWrapper();
-
+		
+		
 		String ordemCargaEnc = "";
 
-		try {
-			jdbc.openSession();
-			NativeSql sql = new NativeSql(jdbc);
-
+		String log = "";
+		
+		jdbc.openSession();
+		
+		NativeSql sql = new NativeSql(jdbc);
+		
+	
 			sql.appendSql("SELECT CASE ");
 			sql.appendSql("         WHEN( COUNT(DISTINCT ORDEMCARGA) = 1 ) THEN 'S' ");
 			sql.appendSql("         ELSE LISTAGG('NF: ' ");
@@ -38,6 +44,8 @@ public class InventarioDAO {
 			sql.appendSql("       AND NUMNOTA IN "
 					+ listNota.toString().replace(" ", "").replace("[", "(").replace("]", ")"));
 			sql.setNamedParameter("ORDCARGA", ordemCarga);
+			
+			log = sql.toString(); 
 
 			try {
 				ResultSet rs = sql.executeQuery();
@@ -46,26 +54,29 @@ public class InventarioDAO {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				log = log + "aqui"; 
+				//e.printStackTrace();
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
-		String[] strSplit = ordemCargaEnc.split(",");
+			List<String> listaOrdemCarga = new ArrayList<String>();
+			
+			if (ordemCargaEnc != null) {
+				String[] strSplit = ordemCargaEnc.split(",");
 
-		ArrayList<String> strList = new ArrayList<String>(Arrays.asList(strSplit));
+				ArrayList<String> strList = new ArrayList<String>(Arrays.asList(strSplit));
 
-		List<String> listaOrdemCarga = new ArrayList<String>();
+				
 
-		for (String s : strList) {
-			listaOrdemCarga.add(s);
+				for (String s : strList) {
+					listaOrdemCarga.add(s);
 
-		}
+				}
+			}
 
 		return listaOrdemCarga;
 
+		//return log;
 	}
 
 	public List<String> notasNaoEncontradas(List<String> listNota, String ordemCarga) throws Exception {
@@ -131,8 +142,8 @@ public class InventarioDAO {
 		EntityFacade entity = EntityFacadeFactory.getDWFFacade();
 
 		jdbc = entity.getJdbcWrapper();
-		String log = " ";
-		try {
+		String log = null;
+		
 			jdbc.openSession();
 			NativeSql sql = new NativeSql(jdbc);
 
@@ -239,19 +250,16 @@ public class InventarioDAO {
 				NativeSql execScript = new NativeSql(jdbc);
 
 				while (rs.next()) {
-					log = log + rs.getString("SQL") + "\n";
+					
 					execScript.executeUpdate(rs.getString("SQL"));
 
 				}
 
-			} catch (Exception e) {
-
-				e.printStackTrace();
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			} catch (IOException | SQLException e) {				
+				log = e.getMessage();
+				//throw e;
+			}	
+		
 		return log;
 
 	}
