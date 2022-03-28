@@ -27,18 +27,25 @@ public class ProgramacaoVisitaWBean {
 		Long codUsu = ctx.getUsuarioLogado().longValue();
 		String arquivo_log = codUsu + " - " + " Log Nova Programacao de Visitas.csv";
 		programacaoVisitaService = new ProgramacaoVisitaService();
+		
+		boolean cancel = false;
 
 		String chaveArquivo = programacaoVisitaService.buscaChave(codUsu, ARQUIVO_IMPORTACAO_PROGRAMACAO_VISITAS,
 				arquivo_log);
 
 		if (chaveArquivo.equals("-1")) {
 			msg = msg + "Você deve anexar apenas um arquivo para realizar a atualizar a Programação de Visitas.";
+			cancel = true;
 		} else if (chaveArquivo.equals("0")) {
 			msg = msg + "O arquivo \"" + ARQUIVO_IMPORTACAO_PROGRAMACAO_VISITAS + "\" não foi anexado.";
+			cancel = true;
 		} else if (chaveArquivo.equals("S")) {
 			msg = msg
 					+ "Data do arquivo anexado anterior a data atual, favor anexar novo arquivo para atualizar a Programação de Visitas.";
-		} else {
+			cancel = true;
+		} 
+
+		if(!cancel){
 
 			String dirIntegracao = javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory()
 					.toString() + "/.sw_file_repository/Sistema/Anexos/TGFPRG";
@@ -264,9 +271,25 @@ public class ProgramacaoVisitaWBean {
 
 						listArqsaida = programacaoVisitaService
 								.IncluirProgramVisNativeSQLWithBatch(listaProgramacaoVisita);
-						if (listArqsaida != null) {
+						
+						Integer qdeAtu = 0;
+						Integer qdeLinhas = 0;
+						
+						for (int i = 0; i < listArqsaida.size(); i++) {
+						   if(listArqsaida.get(i).indexOf("; Atualizado") > 0) {
+							   qdeAtu++;
+						   }
+						   
+						   if(listArqsaida.get(i).replace(" ", "").length() > 0) {
+							   qdeLinhas++;
+						   }
+						}
+						
+						if (listArqsaida != null && qdeLinhas - qdeAtu > 0) {
 							msgResult = msgResult
-									+ "Não foi possível inserir a Programação de Visitas para todos os parceiros. "
+									+ "Total de registros atualizados com sucesso..:" + qdeAtu + "\n"									
+                                    + "Total de registros que não foram atualizados:" + (qdeLinhas - qdeAtu) + "\n"+									
+									"  Verifique o arquivo \" Log Nova Programacao de Visitas \" em anexo."
 									+ "\n";
 						} else {
 							msgResult = msgResult + "Procedimento concluído!";
