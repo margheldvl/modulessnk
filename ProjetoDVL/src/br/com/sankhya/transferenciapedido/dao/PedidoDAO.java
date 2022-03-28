@@ -47,6 +47,7 @@ public class PedidoDAO {
 		sql.appendSql("       AND CABTRANSF.AD_NUNOTADUP IS NULL ");
 		sql.appendSql("       AND CAB.DTNEG >= '17/03/2022' ");
 		sql.appendSql("       AND CAB.CODPARC = '872'  ");
+		sql.appendSql("       AND CAB.STATUSNOTA = 'L' ");
 
 		List<CabecalhoPedidoDVL> listaCabecalhoPed = new ArrayList<CabecalhoPedidoDVL>();
 

@@ -33,16 +33,15 @@ public class ItemPedidoDAO {
 		sql.appendSql("    ,1102 CODLOCALDEST ");
 		sql.appendSql("    ,ITE.VLRUNIT ");
 		sql.appendSql("    ,ITE.VLRTOT ");
-		sql.appendSql("    ,ITE.CODVOL ");
+		sql.appendSql("    ,PRO.CODVOL ");		
 		sql.appendSql("    ,ITE.VLRDESC ");
 		sql.appendSql("    ,ITE.PERCDESC ");
 		sql.appendSql("    ,EST.QDE_EST_VAL ");
 		sql.appendSql("FROM TGFITE ITE  ");
 		sql.appendSql("INNER JOIN TGFCAB CAB ON(CAB.NUNOTA = :NUNOTA)  ");
-		sql.appendSql(
-				"LEFT JOIN TGFCAB CABTRANSF ON(CABTRANSF.AD_NUNOTADUP = CAB.NUNOTA AND CABTRANSF.CODTIPOPER = 32) ");
-		sql.appendSql(
-				"LEFT JOIN TGFITE ITETRANSF ON(CABTRANSF.NUNOTA = ITETRANSF.NUNOTA AND ITETRANSF.CODPROD = ITE.CODPROD AND  ITETRANSF.CODLOCALORIG = 1102) ");
+		sql.appendSql("LEFT JOIN TGFCAB CABTRANSF ON(CABTRANSF.AD_NUNOTADUP = CAB.NUNOTA AND CABTRANSF.CODTIPOPER = 32) ");
+		sql.appendSql("LEFT JOIN TGFITE ITETRANSF ON(CABTRANSF.NUNOTA = ITETRANSF.NUNOTA AND ITETRANSF.CODPROD = ITE.CODPROD AND  ITETRANSF.CODLOCALORIG = 1102) ");
+		sql.appendSql("LEFT JOIN TGFPRO PRO ON(PRO.CODPROD = ITE.CODPROD) ");
 		sql.appendSql("OUTER APPLY(SELECT Count(1) QDE_EST_VAL ");
 		sql.appendSql("                   FROM   TGFEST ESTOQ ");
 		sql.appendSql("                   WHERE  ESTOQ.CODPROD = ITE.CODPROD ");
